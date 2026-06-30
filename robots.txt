@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aleksce.github.io/Pabota344/sitemap.xml
