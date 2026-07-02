@@ -56,5 +56,72 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- FIX: кнопки ведут в @Pabota344, работает и в браузере и внутри Telegram -->
+    <script>
+      const TG_URL = "https://t.me/Pabota344";
+
+      function openTg() {
+        if (window.Telegram && window.Telegram.WebApp) {
+          window.Telegram.WebApp.openLink(TG_URL);
+        } else {
+          location.href = TG_URL;
+        }
+      }
+
+      function fixButtons() {
+        const all = document.querySelectorAll(
+          "button, a, [role='button'], [class*='btn'], [class*='button'], [class*='cta']"
+        );
+
+        all.forEach(function(el) {
+          const text = (el.innerText || el.textContent || "").trim().toLowerCase();
+          if (!text || text.length > 100) return;
+
+          const isActionBtn = (
+            text.includes("заявк")     ||
+            text.includes("подать")    ||
+            text.includes("подробн")   ||
+            text.includes("узнать")    ||
+            text.includes("начать")    ||
+            text.includes("вступить")  ||
+            text.includes("присоединить") ||
+            text.includes("хочу")      ||
+            text.includes("попробовать") ||
+            text.includes("записаться") ||
+            text.includes("больше")    ||
+            text.includes("перейти")
+          );
+
+          if (isActionBtn) {
+            el.style.cursor = "pointer";
+            el.onclick = function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              openTg();
+            };
+            if (el.tagName === "A") {
+              el.href = TG_URL;
+              el.target = "_blank";
+              el.rel = "noopener noreferrer";
+            }
+          }
+        });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function() {
+          setTimeout(fixButtons, 500);
+          setTimeout(fixButtons, 1500);
+          setTimeout(fixButtons, 3000);
+        });
+      } else {
+        setTimeout(fixButtons, 500);
+        setTimeout(fixButtons, 1500);
+        setTimeout(fixButtons, 3000);
+      }
+
+      new MutationObserver(fixButtons).observe(document.body, { childList: true, subtree: true });
+    </script>
   </body>
 </html>
